@@ -1,9 +1,11 @@
 const express = require('express')
+const bodyParser = require('body-parser')
 const { MongoClient, ServerApiVersion } = require('mongodb');
+const port = process.env.PORT || 3001
 const pass = 'AZ7tIiC6qKro7doh'
 const app = express()
-
-
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }))
 
 const uri = "mongodb+srv://samahmud:AZ7tIiC6qKro7doh@first-project.dkbbjak.mongodb.net/?retryWrites=true&w=majority&appName=First-Project";
 
@@ -23,6 +25,29 @@ async function run() {
     // Send a ping to confirm a successful connection
     await client.db("organicdb").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    const database = client.db('organicdb');
+    const productCollection = database.collection('products')
+    const products = {
+      id: 1,
+      name: 'mahmud',
+      quantity: 5,
+      price: 10,
+      method: 'usd'
+    }
+
+    // productCollection.insertOne(products)
+    // .then(res => console.log('first',res))
+
+    app.post('/addProduct', (req, res) => {
+      const productData = req.body; // Access form data in the request body
+      console.log('Form data:', productData);
+  
+      // Perform validation or processing with productData
+      // ...
+  
+      res.send('Product added successfully!'); 
+  });
+
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
@@ -33,7 +58,7 @@ run().catch(console.dir);
 
 
 app.get('/', (req, res) => {
-  res.send('first')
+  res.sendFile(__dirname + '/index.html')
 })
 
-app.listen(3000, () => console.log('npm start on 3000 port'))
+app.listen(port, () => console.log('npm start on 3000 port'))

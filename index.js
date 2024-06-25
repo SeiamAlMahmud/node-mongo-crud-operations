@@ -41,11 +41,14 @@ async function run() {
     app.post('/addProduct', (req, res) => {
       const productData = req.body; // Access form data in the request body
       console.log('Form data:', productData);
-  
+  productCollection.insertOne(productData)
+  .then(res => {
+    console.log(res, 'success')
+  })
       // Perform validation or processing with productData
       // ...
-  
       res.send('Product added successfully!'); 
+  
   });
 
   } finally {

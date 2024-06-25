@@ -41,15 +41,36 @@ async function run() {
     app.post('/addProduct', (req, res) => {
       const productData = req.body; // Access form data in the request body
       console.log('Form data:', productData);
-  productCollection.insertOne(productData)
-  .then(res => {
-    console.log(res, 'success')
-  })
+      productCollection.insertOne(productData)
+        .then(res => {
+          console.log(res, 'success')
+        })
       // Perform validation or processing with productData
       // ...
-      res.send('Product added successfully!'); 
-  
-  });
+      res.send('Product added successfully!');
+
+    });
+    // app.get('/product', (req, res) => {
+    //   productCollection.find({})
+    //   .toArray( (err, documents) => {
+    //     res.send(documents)
+    //   })
+    // })
+
+
+
+
+
+
+    //get all query data
+    app.get("/product", async (req, res) => {
+      const allResult = await productCollection.find().toArray();
+      // for single rewards
+      // const result = await productCollection.find({name: 'mahmud'}).toArray();
+      res.send(allResult);
+    });
+
+
 
   } finally {
     // Ensures that the client will close when you finish/error

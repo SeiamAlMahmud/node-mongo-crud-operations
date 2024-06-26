@@ -1,9 +1,11 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+const cors = require('cors')
 const { MongoClient, ServerApiVersion } = require('mongodb');
-const port = process.env.PORT || 3001
+const port = process.env.PORT || 3000
 const pass = 'AZ7tIiC6qKro7doh'
 const app = express()
+app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
@@ -38,18 +40,16 @@ async function run() {
     // productCollection.insertOne(products)
     // .then(res => console.log('first',res))
 
-    app.post('/addProduct', (req, res) => {
-      const productData = req.body; // Access form data in the request body
-      console.log('Form data:', productData);
-      productCollection.insertOne(productData)
-        .then(res => {
-          console.log(res, 'success')
-        })
-      // Perform validation or processing with productData
-      // ...
-      res.send('Product added successfully!');
+    app.post("/addProduct", async (req,res) =>{
+      const formData = req.body;   
+      console.log(formData)
+      const result = await productCollection.insertOne(formData)
+      // .then(result => {
+        res.send(result)
+      // })
 
-    });
+      console.log(formData)
+    })
     // app.get('/product', (req, res) => {
     //   productCollection.find({})
     //   .toArray( (err, documents) => {

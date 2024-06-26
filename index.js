@@ -2,6 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const { MongoClient, ServerApiVersion } = require('mongodb');
+const ObjectId = require('mongodb').ObjectId
 const port = process.env.PORT || 3000
 const pass = 'AZ7tIiC6qKro7doh'
 const app = express()
@@ -40,24 +41,16 @@ async function run() {
     // productCollection.insertOne(products)
     // .then(res => console.log('first',res))
 
-    app.post("/addProduct", async (req,res) =>{
-      const formData = req.body;   
+    app.post("/addProduct", async (req, res) => {
+      const formData = req.body;
       console.log(formData)
       const result = await productCollection.insertOne(formData)
       // .then(result => {
-        res.send(result)
+      res.send(result)
       // })
 
       console.log(formData)
     })
-    // app.get('/product', (req, res) => {
-    //   productCollection.find({})
-    //   .toArray( (err, documents) => {
-    //     res.send(documents)
-    //   })
-    // })
-
-
 
 
 
@@ -70,7 +63,14 @@ async function run() {
       res.send(allResult);
     });
 
-
+    // delete data 
+    app.delete("/delete/:id", async (req,res)=>{
+      const id = req.params.id
+      console.log(id)
+      const result = await productCollection.deleteOne({_id: new ObjectId(id)})
+      console.log(result)
+      res.send(result)
+    })
 
   } finally {
     // Ensures that the client will close when you finish/error

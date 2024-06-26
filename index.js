@@ -71,7 +71,13 @@ async function run() {
       console.log(result)
       res.send(result)
     })
-
+    // SINGLE PRODUCT 
+    app.get("/product/:id", async (req,res) => {
+      const id = req.params.id
+      const singleResult = await productCollection.find({_id: new ObjectId(id)}).toArray()
+      res.send(singleResult[0])
+      console.log(singleResult[0])
+    })
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();

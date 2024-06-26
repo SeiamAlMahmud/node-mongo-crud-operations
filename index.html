@@ -25,7 +25,7 @@
         let product = [];
 
 
-        const dataUrl = 'http://127.0.0.1:3000/product';
+        const dataUrl = '/product';
 
         // Function to fetch data and display it
         async function fetchDataAndDisplay() {
@@ -40,7 +40,7 @@
                 data.forEach(item => {
                     const itemDiv = document.createElement('div');
                     itemDiv.innerHTML = `<strong>Name:</strong> ${item.name} <br> <strong>Color:</strong> ${item.price} 
-            <button class='btn btn-danger' onclick='deleteItems("${item._id}")'> Delete </button>`;
+            <button class='btn btn-danger' onclick='deleteItems("${item._id}")'> Delete </button>  <button class='btn btn-primary' onclick='updateItems("${item._id}")'> Select </button>`;
                     itemDiv.style.marginBottom = '10px'; // Optional: Adds some space between items
                     container.appendChild(itemDiv);
                 });
@@ -58,6 +58,13 @@
             .then(result => {
                 
                 console.log( result)
+            })
+        }
+        const updateItems = (id) => {
+            fetch(`/product/${id}`)
+            .then(res=> res.json())
+            .then(data => {
+                console.log(data)
             })
         }
         window.onload = fetchDataAndDisplay;

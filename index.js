@@ -64,19 +64,32 @@ async function run() {
     });
 
     // delete data 
-    app.delete("/delete/:id", async (req,res)=>{
+    app.delete("/delete/:id", async (req, res) => {
       const id = req.params.id
       console.log(id)
-      const result = await productCollection.deleteOne({_id: new ObjectId(id)})
+      const result = await productCollection.deleteOne({ _id: new ObjectId(id) })
       console.log(result)
       res.send(result)
     })
     // SINGLE PRODUCT 
-    app.get("/product/:id", async (req,res) => {
+    app.get("/product/:id", async (req, res) => {
       const id = req.params.id
-      const singleResult = await productCollection.find({_id: new ObjectId(id)}).toArray()
+      const singleResult = await productCollection.find({ _id: new ObjectId(id) }).toArray()
       res.send(singleResult[0])
       console.log(singleResult[0])
+    })
+    // UPDATE DATA 
+    app.patch('/update/:id', async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const { price, quantity } = req.body;
+
+      const result = await productCollection.updateOne(
+        filter,
+        { $set: { price, quantity } },
+
+      )
+      res.send(result)
     })
   } finally {
     // Ensures that the client will close when you finish/error

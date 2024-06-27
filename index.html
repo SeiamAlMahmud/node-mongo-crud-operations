@@ -18,29 +18,30 @@
         <input type="number" placeholder="quantity" name="quantity">
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
+    <div class="updateContent container" id="updateContent"></div>
     <div id="array-container"></div>
 
 
     <script>
-        let product = [];
-
-
+        const updateContent = document.querySelector("#updateContent")
+        
+        
         const dataUrl = '/product';
-
+        
         // Function to fetch data and display it
         async function fetchDataAndDisplay() {
             try {
                 const response = await fetch(dataUrl);
                 const data = await response.json();
-
+                
                 // Get the container element
                 const container = document.getElementById('array-container');
-
+                
                 // Iterate through the data and create a div for each object
                 data.forEach(item => {
                     const itemDiv = document.createElement('div');
                     itemDiv.innerHTML = `<strong>Name:</strong> ${item.name} <br> <strong>Color:</strong> ${item.price} 
-            <button class='btn btn-danger' onclick='deleteItems("${item._id}")'> Delete </button>  <button class='btn btn-primary' onclick='updateItems("${item._id}")'> Select </button>`;
+                    <button class='btn btn-danger' onclick='deleteItems("${item._id}")'> Delete </button>  <button class='btn btn-primary' onclick='selectItems("${item._id}")'> Select </button>`;
                     itemDiv.style.marginBottom = '10px'; // Optional: Adds some space between items
                     container.appendChild(itemDiv);
                 });
@@ -60,13 +61,45 @@
                 console.log( result)
             })
         }
-        const updateItems = (id) => {
+        const selectItems = (id) => {
             fetch(`/product/${id}`)
             .then(res=> res.json())
             .then(data => {
+                updateContent.innerHTML = `
+                <h3>ID: ${data._id}</h3>
+                <br />
+                <h4> ${data.name} </h4>
+                <br />
+        <input type="number" placeholder="quantity"  id="quantity" value=${data.quantity}>
+        <input type="number" placeholder="price" id="price" value=${data.price}>
+        <br />
+        <button class='btn  btn-success' onclick='updateItem("${data._id}")'>Update </button>
+                `
                 console.log(data)
+               
             })
         }
+
+
+       
+        const updateItem = (id) => {
+            const price = document.getElementById('price').value;
+            const quantity = document.getElementById('quantity').value;
+            const selectProduct = {price, quantity };
+            fetch(`/update/${id}`, {
+                method: "PATCH",
+                headers: { 'Content-Type': 'application/json' },
+                body:JSON.stringify(selectProduct)
+       })
+       .then(res => res.json())
+       .then(data => {
+        console.log(data)
+       })
+
+
+        }
+
+       
         window.onload = fetchDataAndDisplay;
     </script>
 </body>
